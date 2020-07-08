@@ -1,42 +1,32 @@
-import React, { Component } from 'react';
+import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 
-export class Search extends Component {
+const Search = ({ searchUsers, showClear, clearUsers, setAlert }) => {
 
-    state = {
-        text: "",
-    }
+    const [text, setText] = useState(''); //Creates the text state 
 
-    static propTypes = {
-        searchUsers: PropTypes.func.isRequired,
-        clearUsers: PropTypes.func.isRequired,
-        showClear: PropTypes.bool.isRequired, 
-        setAlert: PropTypes.func.isRequired, 
-    }
+    
 
-    onChange = (e) => this.setState({[e.target.name]: e.target.value});
+    const onChange = (e) => setText(e.target.value);
     //E.target.name will grab the name parameter from the input box, so this code is more ubiquitous
 
-    onSubmit = (e) => { //Arrow function prevents needing to bind "this"
+    const onSubmit = (e) => { //Arrow function prevents needing to bind "this"
         e.preventDefault(); //Need to use prevent default to not save the information to a file
-        if (this.state.text===""){
-            this.props.setAlert("Please Enter Something", "light");
+        if (text===""){
+            setAlert("Please Enter Something", "light");
         }else{
-            this.props.searchUsers(this.state.text);
-            this.setState({text: ""});
+            searchUsers(text);
+            setText("");
         }
 
     }
-    render() {
-
-        const {showClear, clearUsers} = this.props;
 
         return (
             <div>
-                <form className = "form" onSubmit = {this.onSubmit}>
+                <form className = "form" onSubmit = {onSubmit}>
                     <input type = "text" name = "text" 
-                    placeholder="Search Users" value = {this.state.text} 
-                    onChange = {this.onChange}/>
+                    placeholder="Search Users" value = {text} 
+                    onChange = {onChange}/>
 
                     <input type = "submit" value = "Search" 
                     className="btn btn-dark btn-block"/>
@@ -48,7 +38,13 @@ export class Search extends Component {
                 
             </div>
         )
-    }
+}
+
+Search.propTypes = {
+    searchUsers: PropTypes.func.isRequired,
+    clearUsers: PropTypes.func.isRequired,
+    showClear: PropTypes.bool.isRequired, 
+    setAlert: PropTypes.func.isRequired, 
 }
 
 export default Search
